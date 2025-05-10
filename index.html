@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Animated Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        button {
+            width: calc(100% - 12px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .animated-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <h1>My Simple Form</h1>
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" class="animated-element">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" class="animated-element" style="transition-delay: 0.2s;">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" class="animated-element" style="transition-delay: 0.4s;">
+
+        <button type="button" onclick="animateButton()" class="animated-element" style="transition-delay: 0.6s;">Submit</button>
+    </form>
+
+    <div id="message" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <script>
+        function savePreference(key, value) {
+            localStorage.setItem(key, value);
+        }
+
+        function getPreference(key) {
+            return localStorage.getItem(key);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            const storedName = getPreference('userName');
+            const storedEmail = getPreference('userEmail');
+            const storedPassword = getPreference('userPassword'); // Let's add this
+
+            if (storedName) {
+                nameInput.value = storedName;
+                nameInput.classList.add('show');
+            } else {
+                setTimeout(() => nameInput.classList.add('show'), 100);
+            }
+
+            if (storedEmail) {
+                emailInput.value = storedEmail;
+                emailInput.classList.add('show');
+            } else {
+                setTimeout(() => emailInput.classList.add('show'), 300);
+            }
+
+            if (storedPassword) { // And this part to load password if saved
+                passwordInput.value = storedPassword;
+                passwordInput.classList.add('show');
+            } else {
+                setTimeout(() => passwordInput.classList.add('show'), 500);
+            }
+
+            const submitButton = document.querySelector('button');
+            setTimeout(() => submitButton.classList.add('show'), 700); // Adjust delay for the button
+        });
+
+        document.getElementById('myForm').addEventListener('input', function(event) {
+            if (event.target.id === 'name') {
+                savePreference('userName', event.target.value);
+            } else if (event.target.id === 'email') {
+                savePreference('userEmail', event.target.value);
+            } else if (event.target.id === 'password') { // And this to save password
+                savePreference('userPassword', event.target.value);
+            }
+        });
+
+        function animateButton() {
+            const button = document.querySelector('button');
+            button.classList.add('animate');
+            setTimeout(() => {
+                button.classList.remove('animate');
+                document.getElementById('message').innerText = 'Form submitted successfully!';
+            }, 1000); // Adjust time to match CSS animation duration
+        }
+
+        // Optional: Add a simple CSS animation class for the button
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            .animate {
+                animation: pulse 0.5s ease-in-out;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
