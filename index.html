@@ -3,165 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Animated Form</title>
+    <title>Interactive Animated Form</title>
     <style>
+        :root {
+            --primary-color: #4a86e8;
+            --success-color: #5cb85c;
+            --hover-color: #3a76d8;
+            --background-color: #f7f9fc;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            max-width: 600px;
-            margin: 20px auto;
+            color: var(--text-color);
             padding: 20px;
-            background-color: #f4f4f4;
+        }
+
+        .emoji-container {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 80px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+            user-select: none;
+            transition: transform var(--transition-speed);
+        }
+
+        .emoji:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .form-container {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            font-weight: 600;
         }
 
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: color var(--transition-speed);
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        button {
-            width: calc(100% - 12px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             font-size: 16px;
+            outline: none;
+            transition: all var(--transition-speed);
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 134, 232, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: #9e9e9e;
         }
 
         button {
-            background-color: #5cb85c;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+            margin-top: 10px;
         }
 
         button:hover {
-            background-color: #4cae4c;
+            background-color: var(--hover-color);
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         .animated-element {
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
         .show {
             opacity: 1;
             transform: translateY(0);
         }
+
+        #message {
+            margin-top: 24px;
+            font-weight: 500;
+            text-align: center;
+            color: var(--success-color);
+            height: 24px;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        #message.visible {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 44px;
+            cursor: pointer;
+            color: #757575;
+            user-select: none;
+            font-size: 18px;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #121212;
+                --card-color: #1e1e1e;
+                --text-color: #e0e0e0;
+                --border-color: #333333;
+                --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .emoji {
+                font-size: 60px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>My Simple Form</h1>
-    <form id="myForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" class="animated-element">
+    <div class="emoji-container">
+        <div class="emoji" id="emoji" role="img" aria-label="Happy emoji">😊</div>
+    </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" class="animated-element" style="transition-delay: 0.2s;">
+    <div class="form-container">
+        <h1>Welcome Back</h1>
+        <form id="myForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" class="input-field animated-element" placeholder="Enter your name" autocomplete="name">
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" class="animated-element" style="transition-delay: 0.4s;">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="input-field animated-element" placeholder="Enter your email" autocomplete="email">
+            </div>
 
-        <button type="button" onclick="animateButton()" class="animated-element" style="transition-delay: 0.6s;">Submit</button>
-    </form>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="input-field animated-element" placeholder="Enter your password" autocomplete="current-password">
+                <span class="password-toggle" id="togglePassword">👁️</span>
+            </div>
 
-    <div id="message" style="margin-top: 20px; font-weight: bold;"></div>
+            <button type="button" id="submitBtn" class="animated-element">Sign In</button>
+        </form>
+
+        <div id="message" aria-live="polite"></div>
+    </div>
 
     <script>
-        function savePreference(key, value) {
-            localStorage.setItem(key, value);
-        }
+        // Emoji Animation
+        (function() {
+            const emojiElement = document.getElementById('emoji');
+            const emojis = ['😊', '😁', '😎', '🤩', '😄', '🙂', '🌟', '✨'];
+            let currentIndex = 0;
 
-        function getPreference(key) {
-            return localStorage.getItem(key);
-        }
+            emojiElement.addEventListener('click', function() {
+                currentIndex = (currentIndex + 1) % emojis.length;
+                emojiElement.textContent = emojis[currentIndex];
+                
+                // Update aria-label based on emoji
+                const emojiLabels = {
+                    '😊': 'Happy emoji', '😁': 'Grinning emoji', '😎': 'Cool emoji',
+                    '🤩': 'Star-struck emoji', '😄': 'Smiling emoji', '🙂': 'Slightly smiling emoji',
+                    '🌟': 'Star emoji', '✨': 'Sparkles emoji'
+                };
+                
+                emojiElement.setAttribute('aria-label', emojiLabels[emojis[currentIndex]]);
+            });
+        })();
 
-        document.addEventListener('DOMContentLoaded', function() {
+        // Form Animation and Local Storage
+        (function() {
+            // Safe storage handling with encryption for password
+            const storageService = {
+                // Simple encryption (not for real security, just to avoid plain text)
+                encrypt: function(text) {
+                    return btoa(text);
+                },
+                
+                decrypt: function(encoded) {
+                    try {
+                        return atob(encoded);
+                    } catch (e) {
+                        return '';
+                    }
+                },
+                
+                saveItem: function(key, value) {
+                    try {
+                        if (key === 'userPassword' && value) {
+                            localStorage.setItem(key, this.encrypt(value));
+                        } else if (value) {
+                            localStorage.setItem(key, value);
+                        }
+                    } catch (e) {
+                        console.error('Storage error:', e);
+                    }
+                },
+                
+                getItem: function(key) {
+                    try {
+                        const value = localStorage.getItem(key);
+                        if (key === 'userPassword' && value) {
+                            return this.decrypt(value);
+                        }
+                        return value;
+                    } catch (e) {
+                        console.error('Storage retrieval error:', e);
+                        return null;
+                    }
+                },
+                
+                clearAll: function() {
+                    try {
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('userEmail');
+                        localStorage.removeItem('userPassword');
+                    } catch (e) {
+                        console.error('Storage clear error:', e);
+                    }
+                }
+            };
+
+            // Form elements
             const nameInput = document.getElementById('name');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
+            const submitButton = document.getElementById('submitBtn');
+            const messageElement = document.getElementById('message');
+            const togglePassword = document.getElementById('togglePassword');
+            
+            // Form animations on load
+            document.addEventListener('DOMContentLoaded', function() {
+                // Load saved values
+                const storedName = storageService.getItem('userName');
+                const storedEmail = storageService.getItem('userEmail');
+                const storedPassword = storageService.getItem('userPassword');
 
-            const storedName = getPreference('userName');
-            const storedEmail = getPreference('userEmail');
-            const storedPassword = getPreference('userPassword'); // Let's add this
+                if (storedName) nameInput.value = storedName;
+                if (storedEmail) emailInput.value = storedEmail;
+                if (storedPassword) passwordInput.value = storedPassword;
 
-            if (storedName) {
-                nameInput.value = storedName;
-                nameInput.classList.add('show');
-            } else {
-                setTimeout(() => nameInput.classList.add('show'), 100);
+                // Staggered animations
+                const elements = document.querySelectorAll('.animated-element');
+                elements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.classList.add('show');
+                    }, 100 * (index + 1));
+                });
+            });
+
+            // Input event handlers
+            nameInput.addEventListener('input', function() {
+                storageService.saveItem('userName', this.value);
+            });
+
+            emailInput.addEventListener('input', function() {
+                storageService.saveItem('userEmail', this.value);
+            });
+
+            passwordInput.addEventListener('input', function() {
+                storageService.saveItem('userPassword', this.value);
+            });
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '🔒';
+            });
+
+            // Form submission
+            submitButton.addEventListener('click', function() {
+                // Basic validation
+                if (!nameInput.value.trim()) {
+                    showMessage('Please enter your name', 'error');
+                    nameInput.focus();
+                    return;
+                }
+                
+                if (!emailInput.value.trim() || !validateEmail(emailInput.value)) {
+                    showMessage('Please enter a valid email', 'error');
+                    emailInput.focus();
+                    return;
+                }
+                
+                if (!passwordInput.value || passwordInput.value.length < 6) {
+                    showMessage('Password must be at least 6 characters', 'error');
+                    passwordInput.focus();
+                    return;
+                }
+
+                // Animate button and show success message
+                this.classList.add('pulse');
+                setTimeout(() => {
+                    this.classList.remove('pulse');
+                    showMessage('Welcome back, ' + nameInput.value + '!', 'success');
+                    
+                    // Here you would typically send the form data to a server
+                    console.log('Form submitted with values:', {
+                        name: nameInput.value,
+                        email: emailInput.value,
+                        // Don't log password in a real app
+                    });
+                }, 500);
+            });
+
+            // Email validation
+            function validateEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
             }
 
-            if (storedEmail) {
-                emailInput.value = storedEmail;
-                emailInput.classList.add('show');
-            } else {
-                setTimeout(() => emailInput.classList.add('show'), 300);
+            // Message display
+            function showMessage(text, type = 'success') {
+                messageElement.textContent = text;
+                messageElement.className = type + ' visible';
+                messageElement.style.color = type === 'success' ? 'var(--success-color)' : '#e53935';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    messageElement.classList.remove('visible');
+                }, 5000);
             }
 
-            if (storedPassword) { // And this part to load password if saved
-                passwordInput.value = storedPassword;
-                passwordInput.classList.add('show');
-            } else {
-                setTimeout(() => passwordInput.classList.add('show'), 500);
-            }
-
-            const submitButton = document.querySelector('button');
-            setTimeout(() => submitButton.classList.add('show'), 700); // Adjust delay for the button
-        });
-
-        document.getElementById('myForm').addEventListener('input', function(event) {
-            if (event.target.id === 'name') {
-                savePreference('userName', event.target.value);
-            } else if (event.target.id === 'email') {
-                savePreference('userEmail', event.target.value);
-            } else if (event.target.id === 'password') { // And this to save password
-                savePreference('userPassword', event.target.value);
-            }
-        });
-
-        function animateButton() {
-            const button = document.querySelector('button');
-            button.classList.add('animate');
-            setTimeout(() => {
-                button.classList.remove('animate');
-                document.getElementById('message').innerText = 'Form submitted successfully!';
-            }, 1000); // Adjust time to match CSS animation duration
-        }
-
-        // Optional: Add a simple CSS animation class for the button
-        const styleSheet = document.createElement("style");
-        styleSheet.type = "text/css";
-        styleSheet.innerText = `
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-            .animate {
-                animation: pulse 0.5s ease-in-out;
-            }
-        `;
-        document.head.appendChild(styleSheet);
+            // Add keyboard support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    submitButton.click();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
